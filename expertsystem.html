@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crop Disease Expert System</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #7ec850, #2b8a3e);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: #333;
+    }
+
+    .container {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+      width: 90%;
+      max-width: 500px;
+      padding: 30px;
+      text-align: center;
+      transition: 0.3s ease;
+    }
+
+    .container:hover {
+      transform: scale(1.02);
+    }
+
+    h1 {
+      color: #2b8a3e;
+      margin-bottom: 10px;
+    }
+
+    h3 {
+      margin-top: 25px;
+      color: #444;
+    }
+
+    select, button {
+      margin-top: 10px;
+      padding: 10px;
+      width: 80%;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background: #2b8a3e;
+      color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background: #3fae53;
+      transform: scale(1.05);
+    }
+
+    .checkbox-group {
+      text-align: left;
+      width: 80%;
+      margin: auto;
+    }
+
+    label {
+      display: block;
+      margin: 5px 0;
+      font-size: 15px;
+    }
+
+    #loading {
+      font-style: italic;
+      color: #666;
+      margin-top: 20px;
+      display: none;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 17px;
+      font-weight: 500;
+      background: #f4f8f4;
+      border-radius: 10px;
+      padding: 15px;
+      border-left: 5px solid #2b8a3e;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🌾 Crop Disease Expert System</h1>
+    <p>Identify your crop disease by selecting the crop and its symptoms.</p>
+
+    <label for="crop"><b>Select Crop:</b></label><br>
+    <select id="crop">
+      <option value="">-- Select Crop --</option>
+      <option value="rice">Rice</option>
+      <option value="wheat">Wheat</option>
+      <option value="maize">Maize</option>
+      <option value="sugarcane">Sugarcane</option>
+    </select>
+
+    <h3>Select Symptoms:</h3>
+    <div class="checkbox-group">
+      <label><input type="checkbox" id="yellow"> Yellow Leaves</label>
+      <label><input type="checkbox" id="brown"> Brown Spots</label>
+      <label><input type="checkbox" id="white"> White Patches</label>
+      <label><input type="checkbox" id="wilt"> Wilting or Drying</label>
+      <label><input type="checkbox" id="insect"> Insects on Leaves or Stem</label>
+    </div>
+
+    <button onclick="diagnose()">🔍 Diagnose</button>
+    <div id="loading">Diagnosing...</div>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function diagnose() {
+      const crop = document.getElementById("crop").value;
+      const yellow = document.getElementById("yellow").checked;
+      const brown = document.getElementById("brown").checked;
+      const white = document.getElementById("white").checked;
+      const wilt = document.getElementById("wilt").checked;
+      const insect = document.getElementById("insect").checked;
+
+      const loading = document.getElementById("loading");
+      const result = document.getElementById("result");
+
+      result.innerHTML = "";
+      loading.style.display = "block";
+
+      setTimeout(() => {
+        let diagnosis = "";
+        let suggestion = "";
+        let fertilizer = "";
+
+        /* --- Disease Diagnosis Logic --- */
+
+        if (crop === "rice") {
+          if (yellow && brown) {
+            diagnosis = "Bacterial Leaf Blight";
+            suggestion = "Use copper-based fungicide and avoid waterlogging.";
+          } else if (wilt && insect) {
+            diagnosis = "Rice Stem Borer";
+            suggestion = "Use neem-based pesticide or carbofuran granules.";
+          } else {
+            diagnosis = "No major disease detected / unclear symptoms.";
+          }
+        }
+
+        else if (crop === "wheat") {
+          if (white) {
+            diagnosis = "Powdery Mildew";
+            suggestion = "Spray sulfur-based fungicide.";
+          } else if (brown) {
+            diagnosis = "Leaf Rust";
+            suggestion = "Use Mancozeb fungicide spray.";
+          } else {
+            diagnosis = "No major disease detected / unclear symptoms.";
+          }
+        }
+
+        else if (crop === "maize") {
+          if (yellow && brown) {
+            diagnosis = "Turcicum Leaf Blight";
+            suggestion = "Apply Mancozeb fungicide weekly.";
+          } else if (wilt) {
+            diagnosis = "Downy Mildew";
+            suggestion = "Use Metalaxyl fungicide and remove infected plants.";
+          } else {
+            diagnosis = "No major disease detected / unclear symptoms.";
+          }
+        }
+
+        else if (crop === "sugarcane") {
+          if (wilt && yellow) {
+            diagnosis = "Red Rot";
+            suggestion = "Remove infected clumps & treat seed with fungicide.";
+          } else if (insect) {
+            diagnosis = "Sugarcane Shoot Borer";
+            suggestion = "Apply chlorpyrifos or carbofuran.";
+          } else {
+            diagnosis = "No major disease detected / unclear symptoms.";
+          }
+        }
+
+        else {
+          diagnosis = "Please select a crop.";
+        }
+
+        /* ✅ NEW FEATURE: Fertilizer Suggestion */
+        if (yellow) {
+          fertilizer = "Apply Nitrogen fertilizer (Urea)";
+        } else if (brown) {
+          fertilizer = "Apply Potassium fertilizer (MOP)";
+        } else {
+          fertilizer = "Plant looks healthy — No fertilizer needed";
+        }
+
+        loading.style.display = "none";
+
+        result.innerHTML = `
+          ✅ <b>Disease:</b> ${diagnosis}<br>
+          💊 <b>Suggestion:</b> ${suggestion || 'N/A'}<br><br>
+          🌿 <b>Fertilizer Advice:</b> ${fertilizer}
+        `;
+      }, 2000);
+    }
+  </script>
+
+</body>
+</html>
